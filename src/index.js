@@ -2,8 +2,8 @@
 
 import objectMerge from 'object-merge'
 
-const MODULE_NAME = '[Redux-LocalStorage-Simple]'
-const NAMESPACE_DEFAULT = 'redux_localstorage_simple'
+const MODULE_NAME = '[Redux-SessionStorage-Simple]'
+const NAMESPACE_DEFAULT = 'redux_sessionstorage_simple'
 const STATES_DEFAULT = []
 const DEBOUNCE_DEFAULT = 0
 const IMMUTABLEJS_DEFAULT = false
@@ -110,20 +110,20 @@ function realiseObject (objectPath, objectInitialValue = {}) {
 // ---------------------------------------------------
 
 /**
-  Saves specified parts of the Redux state tree into localstorage
+  Saves specified parts of the Redux state tree into sessionstorage
   Note: this is Redux middleware. Read this for an explanation:
   http://redux.js.org/docs/advanced/Middleware.html
 
   PARAMETERS
   ----------
-  @config (Object) - Contains configuration options (leave blank to save entire state tree to localstorage)
+  @config (Object) - Contains configuration options (leave blank to save entire state tree to sessionstorage)
 
             Properties:
               states (Array of Strings, optional) - States to save e.g. ['user', 'products']
-              namespace (String, optional) - Namespace to add before your LocalStorage items
-              debounce (Number, optional) - Debouncing period (in milliseconds) to wait before saving to LocalStorage
+              namespace (String, optional) - Namespace to add before your SessionStorage items
+              debounce (Number, optional) - Debouncing period (in milliseconds) to wait before saving to SessionStorage
                                             Use this as a performance optimization if you feel you are saving
-                                            to LocalStorage too often. Recommended value: 500 - 1000 milliseconds
+                                            to SessionStorage too often. Recommended value: 500 - 1000 milliseconds
 
   USAGE EXAMPLES
   -------------
@@ -136,7 +136,7 @@ function realiseObject (objectPath, objectInitialValue = {}) {
       states: ['user', 'products']
     })
 
-    // save the entire state tree under the namespace 'my_cool_app'. The key 'my_cool_app' will appear in LocalStorage
+    // save the entire state tree under the namespace 'my_cool_app'. The key 'my_cool_app' will appear in SessionStorage
     save({
       namespace: 'my_cool_app'
     })
@@ -146,7 +146,7 @@ function realiseObject (objectPath, objectInitialValue = {}) {
       debounce: 500
     })
 
-    // save specific parts of the state tree with the namespace 'my_cool_app'. The keys 'my_cool_app_user' and 'my_cool_app_products' will appear in LocalStorage
+    // save specific parts of the state tree with the namespace 'my_cool_app'. The keys 'my_cool_app_user' and 'my_cool_app_products' will appear in SessionStorage
     save({
         states: ['user', 'products'],
         namespace: 'my_cool_app',
@@ -180,24 +180,24 @@ export function save ({
       debounce = DEBOUNCE_DEFAULT
     }
 
-    // Check to see whether to debounce LocalStorage saving
+    // Check to see whether to debounce SessionStorage saving
     if (debounce) {
       // Clear the debounce timeout if it was previously set
       if (debounceTimeout) {
         clearTimeout(debounceTimeout)
       }
 
-      // Save to LocalStorage after the debounce period has elapsed
+      // Save to SessionStorage after the debounce period has elapsed
       debounceTimeout = setTimeout(function () {
         _save(states, namespace)
       }, debounce)
-    // No debouncing necessary so save to LocalStorage right now
+    // No debouncing necessary so save to SessionStorage right now
     } else {
       _save(states, namespace)
     }
 
-    // Digs into rootState for the data to put in LocalStorage
-    function getStateForLocalStorage (state, rootState) {
+    // Digs into rootState for the data to put in SessionStorage
+    function getStateForSessionStorage (state, rootState) {
       const delimiter = '.'
 
       if (state.split(delimiter).length > 1) {
@@ -210,15 +210,15 @@ export function save ({
     // Local function to avoid duplication of code above
     function _save () {
       if (states.length === 0) {
-        localStorage[namespace] = JSON.stringify(store.getState())
+        sessionStorage[namespace] = JSON.stringify(store.getState())
       } else {
         states.forEach(state => {
-          const stateForLocalStorage = getStateForLocalStorage(state, store.getState())
-          if (stateForLocalStorage) {
-            localStorage[namespace + '_' + state] = JSON.stringify(stateForLocalStorage)
+          const stateForSessionStorage = getStateForSessionStorage(state, store.getState())
+          if (stateForSessionStorage) {
+            sessionStorage[namespace + '_' + state] = JSON.stringify(stateForSessionStorage)
           } else {
             // Make sure nothing is ever saved for this incorrect state
-            localStorage.removeItem(namespace + '_' + state)
+            sessionStorage.removeItem(namespace + '_' + state)
           }
         })
       }
@@ -229,14 +229,14 @@ export function save ({
 }
 
 /**
-  Loads specified states from localstorage into the Redux state tree.
+  Loads specified states from sessionstorage into the Redux state tree.
 
   PARAMETERS
   ----------
   @config (Object) - Contains configuration options (leave blank to load entire state tree, if it was saved previously that is)
             Properties:
               states (Array of Strings, optional) - Parts of state tree to load e.g. ['user', 'products']
-              namespace (String, optional) - Namespace required to retrieve your LocalStorage items, if any
+              namespace (String, optional) - Namespace required to retrieve your SessionStorage items, if any
 
   Usage examples:
 
@@ -290,15 +290,15 @@ export function load ({
 
   let loadedState = preloadedState
 
-  // Load all of the namespaced Redux data from LocalStorage into local Redux state tree
+  // Load all of the namespaced Redux data from SessionStorage into local Redux state tree
   if (states.length === 0) {
-    if (localStorage[namespace]) {
-      loadedState = JSON.parse(localStorage[namespace])
+    if (sessionStorage[namespace]) {
+      loadedState = JSON.parse(sessionStorage[namespace])
     }
   } else { // Load only specified states into the local Redux state tree
     states.forEach(function (state) {
-      if (localStorage.getItem(namespace + '_' + state)) {
-        loadedState = objectMerge(loadedState, realiseObject(state, JSON.parse(localStorage[namespace + '_' + state])))
+      if (sessionStorage.getItem(namespace + '_' + state)) {
+        loadedState = objectMerge(loadedState, realiseObject(state, JSON.parse(sessionStorage[namespace + '_' + state])))
       } else {
         warn_("Invalid load '" + (namespace + '_' + state) + "' provided. Check your 'states' in 'load()'. If this is your first time running this app you may see this message. To disable it in future use the 'disableWarnings' flag, see documentation.")
       }
@@ -344,12 +344,12 @@ export function combineLoads (...loads) {
 }
 
 /**
-  Clears all Redux state tree data from LocalStorage
+  Clears all Redux state tree data from SessionStorage
   Remember to provide a namespace if you used one during the save process
 
   PARAMETERS
   ----------
-  @config (Object) -Contains configuration options (leave blank to clear entire state tree from LocalStorage, if it was saved without a namespace)
+  @config (Object) -Contains configuration options (leave blank to clear entire state tree from SessionStorage, if it was saved without a namespace)
             Properties:
               namespace (String, optional) - Namespace that you used during the save process
 
@@ -371,10 +371,10 @@ export function clear ({ namespace = NAMESPACE_DEFAULT } = {}) {
     namespace = NAMESPACE_DEFAULT
   }
 
-  for (let key in localStorage) {
+  for (let key in sessionStorage) {
     // key starts with namespace
     if (key.slice(0, namespace.length) === namespace) {
-      localStorage.removeItem(key)
+      sessionStorage.removeItem(key)
     }
   }
 }

@@ -53,7 +53,7 @@
 
 	'use strict';
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; // redux-localstorage-simple dist
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; // redux-sessionstorage-simple dist
 
 
 	var _redux = __webpack_require__(2);
@@ -66,7 +66,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var NAMESPACE_DEFAULT = 'redux_localstorage_simple';
+	var NAMESPACE_DEFAULT = 'redux_sessionstorage_simple';
 	var NAMESPACE_TEST = 'namespace_test';
 
 	// -------------------------------------------------------------------------------
@@ -160,11 +160,11 @@
 	};
 
 	// -------------------------------------------------------------------------------
-	// TEST 0 - LocalStorage, are you there?
+	// TEST 0 - SessionStorage, are you there?
 	// -------------------------------------------------------------------------------
 
 	{
-	  if ((typeof localStorage === 'undefined' ? 'undefined' : _typeof(localStorage)) === 'object') {
+	  if ((typeof sessionStorage === 'undefined' ? 'undefined' : _typeof(sessionStorage)) === 'object') {
 	    outputTestResult('test0', true);
 	  } else {
 	    outputTestResult('test0', false);
@@ -179,13 +179,13 @@
 	{
 	  var middleware = (0, _index.save)();
 
-	  // Store which saves to LocalStorage
+	  // Store which saves to SessionStorage
 	  var storeA = (0, _redux.applyMiddleware)(middleware)(_redux.createStore)((0, _redux.combineReducers)({ reducerA: reducerA, reducerB: reducerB }), initialStateReducers);
 
-	  // Trigger a save to LocalStorage using a noop action
+	  // Trigger a save to SessionStorage using a noop action
 	  storeA.dispatch({ type: NOOP });
 
-	  // Store which loads from LocalStorage
+	  // Store which loads from SessionStorage
 	  var storeB = (0, _redux.createStore)((0, _redux.combineReducers)({ reducerA: reducerA, reducerB: reducerB }), (0, _index.load)());
 
 	  var testResult = (0, _deepEqual2.default)(storeA.getState(), storeB.getState());
@@ -201,13 +201,13 @@
 	{
 	  var _middleware = (0, _index.save)({ states: ['reducerA'] });
 
-	  // Store which saves to LocalStorage
+	  // Store which saves to SessionStorage
 	  var _storeA = (0, _redux.applyMiddleware)(_middleware)(_redux.createStore)((0, _redux.combineReducers)({ reducerA: reducerA, reducerB: reducerB }), initialStateReducers);
 
-	  // Trigger a save to LocalStorage using an append action
+	  // Trigger a save to SessionStorage using an append action
 	  _storeA.dispatch({ type: APPEND });
 
-	  // Store which loads from LocalStorage
+	  // Store which loads from SessionStorage
 	  var _storeB = (0, _redux.createStore)((0, _redux.combineReducers)({ reducerA: reducerA, reducerB: reducerB }), (0, _index.load)({ states: ['reducerA'] }));
 
 	  var _testResult = (0, _deepEqual2.default)(_storeA.getState(), _storeB.getState());
@@ -223,13 +223,13 @@
 	{
 	  var _middleware2 = (0, _index.save)({ namespace: NAMESPACE_TEST });
 
-	  // Store which saves to LocalStorage
+	  // Store which saves to SessionStorage
 	  var _storeA2 = (0, _redux.applyMiddleware)(_middleware2)(_redux.createStore)((0, _redux.combineReducers)({ reducerA: reducerA, reducerB: reducerB }), initialStateReducers);
 
-	  // Trigger a save to LocalStorage using a noop action
+	  // Trigger a save to SessionStorage using a noop action
 	  _storeA2.dispatch({ type: NOOP });
 
-	  // Store which loads from LocalStorage
+	  // Store which loads from SessionStorage
 	  var _storeB2 = (0, _redux.createStore)((0, _redux.combineReducers)({ reducerA: reducerA, reducerB: reducerB }), (0, _index.load)({ namespace: NAMESPACE_TEST }));
 
 	  var _testResult2 = (0, _deepEqual2.default)(_storeA2.getState(), _storeB2.getState());
@@ -245,13 +245,13 @@
 	{
 	  var _middleware3 = (0, _index.save)({ states: ['reducerA'], namespace: NAMESPACE_TEST });
 
-	  // Store which saves to LocalStorage
+	  // Store which saves to SessionStorage
 	  var _storeA3 = (0, _redux.applyMiddleware)(_middleware3)(_redux.createStore)((0, _redux.combineReducers)({ reducerA: reducerA, reducerB: reducerB }), initialStateReducers);
 
-	  // Trigger a save to LocalStorage using an append action
+	  // Trigger a save to SessionStorage using an append action
 	  _storeA3.dispatch({ type: APPEND });
 
-	  // Store which loads from LocalStorage
+	  // Store which loads from SessionStorage
 	  var _storeB3 = (0, _redux.createStore)((0, _redux.combineReducers)({ reducerA: reducerA, reducerB: reducerB }), (0, _index.load)({ states: ['reducerA'], namespace: NAMESPACE_TEST }));
 
 	  var _testResult3 = (0, _deepEqual2.default)(_storeA3.getState(), _storeB3.getState());
@@ -267,19 +267,19 @@
 	{
 	  // Store that saves without a namespace
 	  var _storeA4 = (0, _redux.applyMiddleware)((0, _index.save)())(_redux.createStore)(reducerA, initialStateReducerA);
-	  // Trigger a save to LocalStorage using a noop action
+	  // Trigger a save to SessionStorage using a noop action
 	  _storeA4.dispatch({ type: NOOP });
 
 	  // Store that saves WITH a namespace
 	  var _storeB4 = (0, _redux.applyMiddleware)((0, _index.save)({ namespace: NAMESPACE_TEST }))(_redux.createStore)(reducerA, initialStateReducerA);
-	  // Trigger a save to LocalStorage using a noop action
+	  // Trigger a save to SessionStorage using a noop action
 	  _storeB4.dispatch({ type: NOOP });
 
-	  // Perform the LocalStorage clearing
+	  // Perform the SessionStorage clearing
 	  (0, _index.clear)();
 
 	  outputTestResult('test7', true); // Default test result to true
-	  for (var key in localStorage) {
+	  for (var key in sessionStorage) {
 	    // If data found with default namespace then clearing data has failed
 	    if (key.slice(0, NAMESPACE_DEFAULT.length) === NAMESPACE_DEFAULT) {
 	      // Fail the test
@@ -296,19 +296,19 @@
 	{
 	  // Store that saves without a namespace
 	  var _storeA5 = (0, _redux.applyMiddleware)((0, _index.save)())(_redux.createStore)(reducerA, initialStateReducerA);
-	  // Trigger a save to LocalStorage using a noop action
+	  // Trigger a save to SessionStorage using a noop action
 	  _storeA5.dispatch({ type: NOOP });
 
 	  // Store that saves WITH a namespace
 	  var _storeB5 = (0, _redux.applyMiddleware)((0, _index.save)({ namespace: NAMESPACE_TEST }))(_redux.createStore)(reducerA, initialStateReducerA);
-	  // Trigger a save to LocalStorage using a noop action
+	  // Trigger a save to SessionStorage using a noop action
 	  _storeB5.dispatch({ type: NOOP });
 
-	  // Perform the LocalStorage clearing
+	  // Perform the SessionStorage clearing
 	  (0, _index.clear)({ namespace: NAMESPACE_TEST });
 
 	  outputTestResult('test8', true); // Default test result to true
-	  for (var _key in localStorage) {
+	  for (var _key in sessionStorage) {
 	    // If data found with specified namespace then clearing data has failed
 	    if (_key.slice(0, NAMESPACE_TEST.length) === NAMESPACE_TEST) {
 	      // Fail the test
@@ -328,26 +328,26 @@
 
 	  // Store that saves with a debouncing period
 	  var _storeA6 = (0, _redux.applyMiddleware)((0, _index.save)({ debounce: debouncingPeriod }))(_redux.createStore)(reducerB, initialStateReducerB);
-	  // Trigger a save to LocalStorage using an add action
+	  // Trigger a save to SessionStorage using an add action
 	  _storeA6.dispatch({ type: ADD });
 
-	  // Store which loads from LocalStorage
+	  // Store which loads from SessionStorage
 	  var _storeB6 = (0, _redux.createStore)(reducerB, (0, _index.load)());
 	  // This test result should fail because the debouncing period has
-	  // delayed the data being written to LocalStorage
+	  // delayed the data being written to SessionStorage
 	  var _testResult4 = _storeB6.getState()['y'] === 1;
 	  outputTestResult('test9', _testResult4);
 
-	  // This timeout will recheck LocalStorage after a period longer than
+	  // This timeout will recheck SessionStorage after a period longer than
 	  // our specified debouncing period. Therefore it will see the updated
-	  // LocalStorage dataand the test should pass
+	  // SessionStorage dataand the test should pass
 	  setTimeout(function () {
-	    // Store which loads from LocalStorage
+	    // Store which loads from SessionStorage
 	    var storeC = (0, _redux.createStore)(reducerB, (0, _index.load)());
 	    var testResult = storeC.getState()['y'] === 1;
 	    outputTestResult('test9', testResult);
 
-	    // Perform the LocalStorage clearing
+	    // Perform the SessionStorage clearing
 	    (0, _index.clear)();
 	  }, debouncingPeriod + 200);
 	}
@@ -363,12 +363,12 @@
 
 	  var _middleware4 = (0, _index.save)({ states: states, namespace: NAMESPACE_TEST });
 
-	  // Store which saves to LocalStorage
+	  // Store which saves to SessionStorage
 	  var _storeA7 = (0, _redux.applyMiddleware)(_middleware4)(_redux.createStore)((0, _redux.combineReducers)({ reducerMultipleLevels: reducerMultipleLevels }), initialStateReducersPlusMultipleLevels);
 
 	  _storeA7.dispatch({ type: MODIFY });
 
-	  // Store which loads from LocalStorage
+	  // Store which loads from SessionStorage
 	  var _storeB7 = (0, _redux.createStore)((0, _redux.combineReducers)({ reducerMultipleLevels: reducerMultipleLevels }), (0, _index.load)({
 	    states: states,
 	    namespace: NAMESPACE_TEST,
@@ -388,11 +388,11 @@
 	  document.getElementById(test).className = testResult ? 'true' : 'false';
 	}
 
-	// Clear test data in LocalStorage
+	// Clear test data in SessionStorage
 	function clearTestData() {
-	  for (var _key2 in localStorage) {
+	  for (var _key2 in sessionStorage) {
 	    if (_key2.slice(0, NAMESPACE_DEFAULT.length) === NAMESPACE_DEFAULT || _key2.slice(0, NAMESPACE_TEST.length) === NAMESPACE_TEST) {
-	      localStorage.removeItem(_key2);
+	      sessionStorage.removeItem(_key2);
 	    }
 	  }
 	}
@@ -1644,8 +1644,8 @@
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-	var MODULE_NAME = '[Redux-LocalStorage-Simple]';
-	var NAMESPACE_DEFAULT = 'redux_localstorage_simple';
+	var MODULE_NAME = '[Redux-SessionStorage-Simple]';
+	var NAMESPACE_DEFAULT = 'redux_sessionstorage_simple';
 	var STATES_DEFAULT = [];
 	var DEBOUNCE_DEFAULT = 0;
 	var IMMUTABLEJS_DEFAULT = false;
@@ -1754,20 +1754,20 @@
 	// ---------------------------------------------------
 
 	/**
-	  Saves specified parts of the Redux state tree into localstorage
+	  Saves specified parts of the Redux state tree into sessionstorage
 	  Note: this is Redux middleware. Read this for an explanation:
 	  http://redux.js.org/docs/advanced/Middleware.html
 
 	  PARAMETERS
 	  ----------
-	  @config (Object) - Contains configuration options (leave blank to save entire state tree to localstorage)
+	  @config (Object) - Contains configuration options (leave blank to save entire state tree to sessionstorage)
 
 	            Properties:
 	              states (Array of Strings, optional) - States to save e.g. ['user', 'products']
-	              namespace (String, optional) - Namespace to add before your LocalStorage items
-	              debounce (Number, optional) - Debouncing period (in milliseconds) to wait before saving to LocalStorage
+	              namespace (String, optional) - Namespace to add before your SessionStorage items
+	              debounce (Number, optional) - Debouncing period (in milliseconds) to wait before saving to SessionStorage
 	                                            Use this as a performance optimization if you feel you are saving
-	                                            to LocalStorage too often. Recommended value: 500 - 1000 milliseconds
+	                                            to SessionStorage too often. Recommended value: 500 - 1000 milliseconds
 
 	  USAGE EXAMPLES
 	  -------------
@@ -1780,7 +1780,7 @@
 	      states: ['user', 'products']
 	    })
 
-	    // save the entire state tree under the namespace 'my_cool_app'. The key 'my_cool_app' will appear in LocalStorage
+	    // save the entire state tree under the namespace 'my_cool_app'. The key 'my_cool_app' will appear in SessionStorage
 	    save({
 	      namespace: 'my_cool_app'
 	    })
@@ -1790,7 +1790,7 @@
 	      debounce: 500
 	    })
 
-	    // save specific parts of the state tree with the namespace 'my_cool_app'. The keys 'my_cool_app_user' and 'my_cool_app_products' will appear in LocalStorage
+	    // save specific parts of the state tree with the namespace 'my_cool_app'. The keys 'my_cool_app_user' and 'my_cool_app_products' will appear in SessionStorage
 	    save({
 	        states: ['user', 'products'],
 	        namespace: 'my_cool_app',
@@ -1830,24 +1830,24 @@
 	          debounce = DEBOUNCE_DEFAULT;
 	        }
 
-	        // Check to see whether to debounce LocalStorage saving
+	        // Check to see whether to debounce SessionStorage saving
 	        if (debounce) {
 	          // Clear the debounce timeout if it was previously set
 	          if (debounceTimeout) {
 	            clearTimeout(debounceTimeout);
 	          }
 
-	          // Save to LocalStorage after the debounce period has elapsed
+	          // Save to SessionStorage after the debounce period has elapsed
 	          debounceTimeout = setTimeout(function () {
 	            _save(states, namespace);
 	          }, debounce);
-	          // No debouncing necessary so save to LocalStorage right now
+	          // No debouncing necessary so save to SessionStorage right now
 	        } else {
 	          _save(states, namespace);
 	        }
 
-	        // Digs into rootState for the data to put in LocalStorage
-	        function getStateForLocalStorage(state, rootState) {
+	        // Digs into rootState for the data to put in SessionStorage
+	        function getStateForSessionStorage(state, rootState) {
 	          var delimiter = '.';
 
 	          if (state.split(delimiter).length > 1) {
@@ -1860,15 +1860,15 @@
 	        // Local function to avoid duplication of code above
 	        function _save() {
 	          if (states.length === 0) {
-	            localStorage[namespace] = JSON.stringify(store.getState());
+	            sessionStorage[namespace] = JSON.stringify(store.getState());
 	          } else {
 	            states.forEach(function (state) {
-	              var stateForLocalStorage = getStateForLocalStorage(state, store.getState());
-	              if (stateForLocalStorage) {
-	                localStorage[namespace + '_' + state] = JSON.stringify(stateForLocalStorage);
+	              var stateForSessionStorage = getStateForSessionStorage(state, store.getState());
+	              if (stateForSessionStorage) {
+	                sessionStorage[namespace + '_' + state] = JSON.stringify(stateForSessionStorage);
 	              } else {
 	                // Make sure nothing is ever saved for this incorrect state
-	                localStorage.removeItem(namespace + '_' + state);
+	                sessionStorage.removeItem(namespace + '_' + state);
 	              }
 	            });
 	          }
@@ -1881,14 +1881,14 @@
 	}
 
 	/**
-	  Loads specified states from localstorage into the Redux state tree.
+	  Loads specified states from sessionstorage into the Redux state tree.
 
 	  PARAMETERS
 	  ----------
 	  @config (Object) - Contains configuration options (leave blank to load entire state tree, if it was saved previously that is)
 	            Properties:
 	              states (Array of Strings, optional) - Parts of state tree to load e.g. ['user', 'products']
-	              namespace (String, optional) - Namespace required to retrieve your LocalStorage items, if any
+	              namespace (String, optional) - Namespace required to retrieve your SessionStorage items, if any
 
 	  Usage examples:
 
@@ -1948,16 +1948,16 @@
 
 	  var loadedState = preloadedState;
 
-	  // Load all of the namespaced Redux data from LocalStorage into local Redux state tree
+	  // Load all of the namespaced Redux data from SessionStorage into local Redux state tree
 	  if (states.length === 0) {
-	    if (localStorage[namespace]) {
-	      loadedState = JSON.parse(localStorage[namespace]);
+	    if (sessionStorage[namespace]) {
+	      loadedState = JSON.parse(sessionStorage[namespace]);
 	    }
 	  } else {
 	    // Load only specified states into the local Redux state tree
 	    states.forEach(function (state) {
-	      if (localStorage.getItem(namespace + '_' + state)) {
-	        loadedState = (0, _objectMerge2.default)(loadedState, realiseObject(state, JSON.parse(localStorage[namespace + '_' + state])));
+	      if (sessionStorage.getItem(namespace + '_' + state)) {
+	        loadedState = (0, _objectMerge2.default)(loadedState, realiseObject(state, JSON.parse(sessionStorage[namespace + '_' + state])));
 	      } else {
 	        warn_("Invalid load '" + (namespace + '_' + state) + "' provided. Check your 'states' in 'load()'. If this is your first time running this app you may see this message. To disable it in future use the 'disableWarnings' flag, see documentation.");
 	      }
@@ -2007,12 +2007,12 @@
 	}
 
 	/**
-	  Clears all Redux state tree data from LocalStorage
+	  Clears all Redux state tree data from SessionStorage
 	  Remember to provide a namespace if you used one during the save process
 
 	  PARAMETERS
 	  ----------
-	  @config (Object) -Contains configuration options (leave blank to clear entire state tree from LocalStorage, if it was saved without a namespace)
+	  @config (Object) -Contains configuration options (leave blank to clear entire state tree from SessionStorage, if it was saved without a namespace)
 	            Properties:
 	              namespace (String, optional) - Namespace that you used during the save process
 
@@ -2038,10 +2038,10 @@
 	    namespace = NAMESPACE_DEFAULT;
 	  }
 
-	  for (var key in localStorage) {
+	  for (var key in sessionStorage) {
 	    // key starts with namespace
 	    if (key.slice(0, namespace.length) === namespace) {
-	      localStorage.removeItem(key);
+	      sessionStorage.removeItem(key);
 	    }
 	  }
 	}

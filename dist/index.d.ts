@@ -1,7 +1,7 @@
 import {Middleware} from "redux";
-import * as m from 'redux-localstorage-simple';
+import * as m from 'redux-sessionstorage-simple';
 
-declare module 'redux-localstorage-simple' {
+declare module 'redux-sessionstorage-simple' {
   interface RLSOptions {
     states?: string[];
     namespace?: string;

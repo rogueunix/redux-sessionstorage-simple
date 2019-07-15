@@ -1,10 +1,10 @@
 'use strict'
 
 import { createStore, applyMiddleware, combineReducers } from 'redux'
-import { save, load, combineLoads, clear } from '../src/index' // redux-localstorage-simple dist
+import { save, load, combineLoads, clear } from '../src/index' // redux-sessionstorage-simple dist
 import equal from 'deep-equal'
 
-const NAMESPACE_DEFAULT = 'redux_localstorage_simple'
+const NAMESPACE_DEFAULT = 'redux_sessionstorage_simple'
 const NAMESPACE_TEST = 'namespace_test'
 
 // -------------------------------------------------------------------------------
@@ -90,11 +90,11 @@ var reducerMultipleLevels = function (state = initialStateReducerMultipleLevels,
 }
 
 // -------------------------------------------------------------------------------
-// TEST 0 - LocalStorage, are you there?
+// TEST 0 - SessionStorage, are you there?
 // -------------------------------------------------------------------------------
 
 {
-  if (typeof localStorage === 'object') {
+  if (typeof sessionStorage === 'object') {
     outputTestResult('test0', true)
   } else {
     outputTestResult('test0', false)
@@ -109,16 +109,16 @@ clearTestData()
 {
   let middleware = save()
 
-  // Store which saves to LocalStorage
+  // Store which saves to SessionStorage
   let storeA = applyMiddleware(middleware)(createStore)(
     combineReducers({ reducerA, reducerB }),
     initialStateReducers
   )
 
-  // Trigger a save to LocalStorage using a noop action
+  // Trigger a save to SessionStorage using a noop action
   storeA.dispatch({ type: NOOP })
 
-  // Store which loads from LocalStorage
+  // Store which loads from SessionStorage
   let storeB = createStore(
     combineReducers({ reducerA, reducerB }),
     load()
@@ -140,16 +140,16 @@ clearTestData()
 {
   let middleware = save({ states: ['reducerA'] })
 
-  // Store which saves to LocalStorage
+  // Store which saves to SessionStorage
   let storeA = applyMiddleware(middleware)(createStore)(
     combineReducers({ reducerA, reducerB }),
     initialStateReducers
   )
 
-  // Trigger a save to LocalStorage using an append action
+  // Trigger a save to SessionStorage using an append action
   storeA.dispatch({ type: APPEND })
 
-  // Store which loads from LocalStorage
+  // Store which loads from SessionStorage
   let storeB = createStore(
     combineReducers({ reducerA, reducerB }),
     load({ states: ['reducerA'] })
@@ -171,16 +171,16 @@ clearTestData()
 {
   let middleware = save({ namespace: NAMESPACE_TEST })
 
-  // Store which saves to LocalStorage
+  // Store which saves to SessionStorage
   let storeA = applyMiddleware(middleware)(createStore)(
     combineReducers({ reducerA, reducerB }),
     initialStateReducers
   )
 
-  // Trigger a save to LocalStorage using a noop action
+  // Trigger a save to SessionStorage using a noop action
   storeA.dispatch({ type: NOOP })
 
-  // Store which loads from LocalStorage
+  // Store which loads from SessionStorage
   let storeB = createStore(
     combineReducers({ reducerA, reducerB }),
     load({ namespace: NAMESPACE_TEST })
@@ -202,16 +202,16 @@ clearTestData()
 {
   let middleware = save({ states: ['reducerA'], namespace: NAMESPACE_TEST })
 
-  // Store which saves to LocalStorage
+  // Store which saves to SessionStorage
   let storeA = applyMiddleware(middleware)(createStore)(
     combineReducers({ reducerA, reducerB }),
     initialStateReducers
   )
 
-  // Trigger a save to LocalStorage using an append action
+  // Trigger a save to SessionStorage using an append action
   storeA.dispatch({ type: APPEND })
 
-  // Store which loads from LocalStorage
+  // Store which loads from SessionStorage
   let storeB = createStore(
     combineReducers({ reducerA, reducerB }),
     load({ states: ['reducerA'], namespace: NAMESPACE_TEST })
@@ -233,19 +233,19 @@ clearTestData()
 {
   // Store that saves without a namespace
   let storeA = applyMiddleware(save())(createStore)(reducerA, initialStateReducerA)
-  // Trigger a save to LocalStorage using a noop action
+  // Trigger a save to SessionStorage using a noop action
   storeA.dispatch({ type: NOOP })
 
   // Store that saves WITH a namespace
   let storeB = applyMiddleware(save({ namespace: NAMESPACE_TEST }))(createStore)(reducerA, initialStateReducerA)
-  // Trigger a save to LocalStorage using a noop action
+  // Trigger a save to SessionStorage using a noop action
   storeB.dispatch({ type: NOOP })
 
-  // Perform the LocalStorage clearing
+  // Perform the SessionStorage clearing
   clear()
 
   outputTestResult('test7', true) // Default test result to true
-  for (let key in localStorage) {
+  for (let key in sessionStorage) {
     // If data found with default namespace then clearing data has failed
     if (key.slice(0, NAMESPACE_DEFAULT.length) === NAMESPACE_DEFAULT) {
       // Fail the test
@@ -262,19 +262,19 @@ clearTestData()
 {
   // Store that saves without a namespace
   let storeA = applyMiddleware(save())(createStore)(reducerA, initialStateReducerA)
-  // Trigger a save to LocalStorage using a noop action
+  // Trigger a save to SessionStorage using a noop action
   storeA.dispatch({ type: NOOP })
 
   // Store that saves WITH a namespace
   let storeB = applyMiddleware(save({ namespace: NAMESPACE_TEST }))(createStore)(reducerA, initialStateReducerA)
-  // Trigger a save to LocalStorage using a noop action
+  // Trigger a save to SessionStorage using a noop action
   storeB.dispatch({ type: NOOP })
 
-  // Perform the LocalStorage clearing
+  // Perform the SessionStorage clearing
   clear({ namespace: NAMESPACE_TEST })
 
   outputTestResult('test8', true) // Default test result to true
-  for (let key in localStorage) {
+  for (let key in sessionStorage) {
     // If data found with specified namespace then clearing data has failed
     if (key.slice(0, NAMESPACE_TEST.length) === NAMESPACE_TEST) {
       // Fail the test
@@ -294,26 +294,26 @@ clearTestData()
 
   // Store that saves with a debouncing period
   let storeA = applyMiddleware(save({debounce: debouncingPeriod}))(createStore)(reducerB, initialStateReducerB)
-  // Trigger a save to LocalStorage using an add action
+  // Trigger a save to SessionStorage using an add action
   storeA.dispatch({ type: ADD })
 
-  // Store which loads from LocalStorage
+  // Store which loads from SessionStorage
   let storeB = createStore(reducerB, load())
   // This test result should fail because the debouncing period has
-  // delayed the data being written to LocalStorage
+  // delayed the data being written to SessionStorage
   let testResult = storeB.getState()['y'] === 1
   outputTestResult('test9', testResult)
 
-  // This timeout will recheck LocalStorage after a period longer than
+  // This timeout will recheck SessionStorage after a period longer than
   // our specified debouncing period. Therefore it will see the updated
-  // LocalStorage dataand the test should pass
+  // SessionStorage dataand the test should pass
   setTimeout(function () {
-    // Store which loads from LocalStorage
+    // Store which loads from SessionStorage
     let storeC = createStore(reducerB, load())
     let testResult = storeC.getState()['y'] === 1
     outputTestResult('test9', testResult)
 
-    // Perform the LocalStorage clearing
+    // Perform the SessionStorage clearing
     clear()
   }, debouncingPeriod + 200)
 }
@@ -332,7 +332,7 @@ clearTestData()
 
   let middleware = save({ states: states, namespace: NAMESPACE_TEST })
 
-  // Store which saves to LocalStorage
+  // Store which saves to SessionStorage
   let storeA = applyMiddleware(middleware)(createStore)(
     combineReducers({ reducerMultipleLevels }),
     initialStateReducersPlusMultipleLevels
@@ -340,7 +340,7 @@ clearTestData()
 
   storeA.dispatch({ type: MODIFY })
 
-  // Store which loads from LocalStorage
+  // Store which loads from SessionStorage
   let storeB = createStore(
     combineReducers({ reducerMultipleLevels }),
     load({
@@ -366,12 +366,12 @@ function outputTestResult (test, testResult) {
   document.getElementById(test).className = (testResult) ? 'true' : 'false'
 }
 
-// Clear test data in LocalStorage
+// Clear test data in SessionStorage
 function clearTestData () {
-  for (let key in localStorage) {
+  for (let key in sessionStorage) {
     if (key.slice(0, NAMESPACE_DEFAULT.length) === NAMESPACE_DEFAULT ||
         key.slice(0, NAMESPACE_TEST.length) === NAMESPACE_TEST) {
-      localStorage.removeItem(key)
+      sessionStorage.removeItem(key)
     }
   }
 }

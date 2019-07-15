@@ -1,7 +1,7 @@
 {
-  "name": "redux-localstorage-simple",
-  "version": "2.1.6",
-  "description": "Save and load Redux state to and from LocalStorage.",
+  "name": "redux-sessionstorage-simple",
+  "version": "1.0.0",
+  "description": "Save and load Redux state to and from SessionStorage.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -12,19 +12,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kilkelly/redux-localstorage-simple.git"
+    "url": "git+https://github.com/rogueunix/redux-sessionstorage-simple.git"
   },
   "keywords": [
     "redux",
-    "localstorage",
+    "sessionstorage",
     "immutablejs"
   ],
-  "author": "Frank Kilkelly",
+  "author": "Evan Ramer",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kilkelly/redux-localstorage-simple/issues"
+    "url": "https://github.com/rogueunix/redux-sessionstorage-simple/issues"
   },
-  "homepage": "https://github.com/kilkelly/redux-localstorage-simple#readme",
+  "homepage": "https://github.com/rogueunix/redux-sessionstorage-simple#readme",
   "dependencies": {
     "object-merge": "2.5.1"
   },
