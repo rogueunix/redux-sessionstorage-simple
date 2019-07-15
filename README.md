@@ -6,7 +6,7 @@ The same library by [kilkelly](https://github.com/kilkelly/redux-localstorage-si
 
 ## Installation
 ```sh
-npm install --save redux-localstorage-simple
+yarn add https://github.com/rogueunix/redux-sessionstorage-simple.git
 ```
 
 ## Usage Example (ES6 code)
